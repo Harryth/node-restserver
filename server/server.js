@@ -1,5 +1,8 @@
 require("./config/config")
+
 const express = require('express')
+const mongoose = require('mongoose')
+
 const app = express()
 const bodyParser = require('body-parser')
 
@@ -9,38 +12,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/user', function(req, res) {
-    res.json('GET user')
-})
+app.use(require('./routes/user'))
 
-app.post('/user', function(req, res) {
+mongoose.connect(process.env.DB_URL, (err, resp) => {
 
-    let body = req.body
+    if (err) throw err
 
-    if (body.name === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: "El nombre es un campo obligatorio"
-        })
-    } else {
-
-        res.json({
-            person: body
-        })
-    }
-})
-
-app.put('/user/:id', function(req, res) {
-
-    let id = req.params.id
-
-    res.json({
-        id
-    })
-})
-
-app.delete('/user', function(req, res) {
-    res.json('DELETE user')
+    console.log(`Base de dato online`)
 })
 
 app.listen(process.env.PORT, () => {
