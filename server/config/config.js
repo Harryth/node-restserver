@@ -1,13 +1,13 @@
 // =========================================
 // Puerto
-process.env.PORT = process.env.PORT || 3000
-    // =========================================
+process.env.PORT = process.env.PORT || 3000;
+// =========================================
 
 
 // =========================================
 // Entorno
-process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
-    // =========================================
+process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+// =========================================
 
 
 // =========================================
@@ -15,12 +15,12 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 
 let urlDB
 
-// if (process.env.NODE_ENV === 'dev') {
-//     urlDB = 'mongodb://localhost:27017/test'
-// } else {
-urlDB = 'mongodb://test-user:test11235@ds237660.mlab.com:37660/test-nodejs-rest'
-    // }
-    // =========================================
+if (process.env.NODE_ENV === 'dev') {
+    urlDB = 'mongodb://localhost:27017/test'
+} else {
+    urlDB = process.env.MLAB_URL
+}
+// =========================================
 
 
 process.env.DB_URL = urlDB
