@@ -2,10 +2,10 @@ const express = require('express')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 const User = require('../models/user')
-
+const { verifyToken, verifyAdminRole } = require('../middlewares/authentication')
 const app = express()
 
-app.get('/user', function(req, res) {
+app.get('/user', verifyToken, (req, res) => {
 
     let from = Number(req.query.from) || 0
     let page = Number(req.query.page) || 5
@@ -33,7 +33,7 @@ app.get('/user', function(req, res) {
         })
 })
 
-app.post('/user', function(req, res) {
+app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
 
     let body = req.body
 
@@ -60,7 +60,7 @@ app.post('/user', function(req, res) {
     })
 })
 
-app.put('/user/:id', function(req, res) {
+app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
 
     let id = req.params.id
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'state'])
@@ -70,7 +70,9 @@ app.put('/user/:id', function(req, res) {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                err
+                err: {
+                    message: 'Usuario no encontrado en la base de datos'
+                }
             })
         }
 
@@ -82,7 +84,7 @@ app.put('/user/:id', function(req, res) {
 
 })
 
-app.delete('/user/:id', function(req, res) {
+app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
 
     let id = req.params.id
     let delUser = { state: false }
